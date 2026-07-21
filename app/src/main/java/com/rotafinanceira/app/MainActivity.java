@@ -3,9 +3,6 @@ package com.rotafinanceira.app;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -16,7 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 public class MainActivity extends Activity {
-    private static final String APP_URL = "https://rota-financeira.gabriella201876.chatgpt.site";
+    private static final String APP_URL = "file:///android_asset/index.html";
     private WebView webView;
     private ProgressBar progressBar;
 
@@ -35,7 +32,8 @@ public class MainActivity extends Activity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
-        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        settings.setAllowFileAccess(true);
         settings.setMediaPlaybackRequiresUserGesture(true);
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
@@ -68,32 +66,9 @@ public class MainActivity extends Activity {
 
         if (savedInstanceState != null) {
             webView.restoreState(savedInstanceState);
-        } else if (hasInternet()) {
-            webView.loadUrl(APP_URL);
         } else {
-            showOfflineMessage();
+            webView.loadUrl(APP_URL);
         }
-    }
-
-    private boolean hasInternet() {
-        ConnectivityManager manager = getSystemService(ConnectivityManager.class);
-        if (manager == null) return false;
-        Network network = manager.getActiveNetwork();
-        if (network == null) return false;
-        NetworkCapabilities capabilities = manager.getNetworkCapabilities(network);
-        return capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
-    }
-
-    private void showOfflineMessage() {
-        String html = "<html><meta name='viewport' content='width=device-width,initial-scale=1'>" +
-                "<body style='margin:0;background:#0B0F0E;color:#F5F7F6;font-family:sans-serif;" +
-                "display:grid;place-items:center;min-height:100vh;text-align:center'>" +
-                "<div style='padding:32px'><h2>Você está sem internet</h2>" +
-                "<p style='color:#8F9C96'>Conecte-se e abra o Rota Financeira novamente.</p>" +
-                "<button onclick='location.href=\"" + APP_URL + "\"' style='border:0;border-radius:10px;" +
-                "padding:14px 20px;background:#A8F06A;color:#10140F;font-weight:bold'>Tentar novamente</button>" +
-                "</div></body></html>";
-        webView.loadDataWithBaseURL(APP_URL, html, "text/html", "UTF-8", null);
     }
 
     @Override

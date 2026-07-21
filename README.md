@@ -10,8 +10,5 @@ Aplicativo Android do **Rota Financeira** para motoristas de Uber e 99.
 4. Clique em **Run workflow**.
 5. Quando a execução terminar, abra-a e baixe o artefato **rota-financeira-apk**.
 
-O aplicativo Android carrega a versão oficial publicada em:
-
-https://rota-financeira.gabriella201876.chatgpt.site
-
-Os lançamentos ficam armazenados localmente no aplicativo instalado.
+Esta versão funciona offline, não exige conta do ChatGPT e armazena os lançamentos
+localmente no aparelho. Para a Play Store, gere também o bundle com `:app:bundleRelease`.
