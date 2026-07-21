@@ -1,18 +1,100 @@
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#0b0f0e">
+  <title>Rota Financeira</title>
+  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="auth.css">
+</head>
+<body>
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="auth-brand"><span class="logo">RF</span><h1>Rota Financeira</h1><p>Organize seus ganhos e despesas na estrada.</p></div>
+      <form id="loginForm" class="auth-form">
+        <h2>Entrar</h2>
+        <label>E-mail<input id="loginEmail" type="email" autocomplete="email" required placeholder="seu@email.com"></label>
+        <label>Senha<input id="loginPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="Sua senha"></label>
+        <button class="primary full" type="submit">Entrar</button>
+        <button class="text-btn" type="button" id="forgotBtn">Esqueci minha senha</button>
+        <p>Ainda não tem conta? <button class="link-inline" type="button" data-auth-view="register">Criar conta</button></p>
+      </form>
+      <form id="registerForm" class="auth-form hidden">
+        <h2>Criar sua conta</h2><div class="trial-badge">7 dias grátis • depois R$ 14,90/mês</div>
+        <label>Nome completo<input id="registerName" required maxlength="80" placeholder="Seu nome"></label>
+        <label>E-mail<input id="registerEmail" type="email" autocomplete="email" required placeholder="seu@email.com"></label>
+        <label>Senha<input id="registerPassword" type="password" autocomplete="new-password" minlength="6" required placeholder="Mínimo de 6 caracteres"></label>
+        <button class="primary full" type="submit">Começar período gratuito</button>
+        <p>Já possui conta? <button class="link-inline" type="button" data-auth-view="login">Entrar</button></p>
+      </form>
+      <div id="authMessage" class="auth-message"></div>
+    </div>
+  </section>
+  <section id="paywall" class="auth-screen hidden"><div class="auth-card"><div class="auth-brand"><span class="logo">RF</span><h1>Seu teste terminou</h1><p>Assine o Rota Financeira Pro para continuar usando seus dados.</p></div><div class="price"><strong>R$ 14,90</strong><span>por mês</span></div><button class="primary full" id="subscribeBtn">Assinar pela Google Play</button><button class="secondary full" id="paywallLogout">Sair da conta</button></div></section>
+  <header class="topbar">
+    <div class="brand"><span class="logo">RF</span><div><strong>Rota Financeira</strong><small>Seu dinheiro no caminho certo</small></div></div>
+    <button class="icon-btn" id="settingsBtn" aria-label="Configurações">⚙</button>
+  </header>
 
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+  <main>
+    <section class="page active" id="dashboard">
+      <div class="greeting"><div><small id="todayLabel"></small><h1>Visão geral</h1></div><button class="primary mini" data-open="transactionModal">+ Lançar</button></div>
+      <article class="balance-card">
+        <span>Saldo do mês</span><strong id="monthBalance">R$ 0,00</strong>
+        <div class="balance-row"><div><small>Entradas</small><b class="income" id="monthIncome">R$ 0,00</b></div><div><small>Saídas</small><b class="expense" id="monthExpense">R$ 0,00</b></div></div>
+      </article>
+      <article class="goal-card card">
+        <div class="section-title"><div><small>Meta semanal</small><h2 id="goalValue">R$ 0,00</h2></div><button class="text-btn" data-open="goalModal">Editar</button></div>
+        <div class="progress"><i id="goalProgress"></i></div>
+        <div class="goal-info"><span id="goalReached">R$ 0,00 alcançados</span><b id="goalPercent">0%</b></div>
+      </article>
+      <div class="section-title"><h2>Resumo da semana</h2><small id="weekRange"></small></div>
+      <div class="stats-grid">
+        <article class="stat"><span>Receita</span><strong class="income" id="weekIncome">R$ 0,00</strong></article>
+        <article class="stat"><span>Despesas</span><strong class="expense" id="weekExpense">R$ 0,00</strong></article>
+        <article class="stat"><span>Lucro</span><strong id="weekProfit">R$ 0,00</strong></article>
+        <article class="stat"><span>Margem</span><strong id="weekMargin">0%</strong></article>
+      </div>
+      <div class="section-title"><h2>Gastos por categoria</h2></div>
+      <article class="card" id="categoryChart"><p class="empty">Adicione despesas para ver a distribuição.</p></article>
+      <div class="section-title"><h2>Últimos lançamentos</h2><button class="text-btn" data-page="transactions">Ver todos</button></div>
+      <div id="recentList" class="list"></div>
+    </section>
 
-rootProject.name = "RotaFinanceira"
-include ":app"
+    <section class="page" id="transactions">
+      <div class="page-head"><div><small>Histórico financeiro</small><h1>Lançamentos</h1></div><button class="primary mini" data-open="transactionModal">+ Novo</button></div>
+      <div class="filters"><select id="filterType"><option value="all">Todos</option><option value="income">Entradas</option><option value="expense">Saídas</option></select><input type="month" id="filterMonth"></div>
+      <div id="transactionList" class="list"></div>
+    </section>
+
+    <section class="page" id="calendar">
+      <div class="page-head"><div><small>Contas e recebimentos</small><h1>Calendário</h1></div><button class="primary mini" data-open="scheduleModal">+ Agendar</button></div>
+      <div class="calendar-nav card"><button id="prevMonth">‹</button><strong id="calendarTitle"></strong><button id="nextMonth">›</button></div>
+      <div class="calendar card"><div class="weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div id="calendarGrid" class="days"></div></div>
+      <div class="section-title"><h2>Compromissos do mês</h2></div><div id="scheduleList" class="list"></div>
+    </section>
+
+    <section class="page" id="reports">
+      <div class="page-head"><div><small>Análise financeira</small><h1>Relatórios</h1></div></div>
+      <article class="balance-card"><span>Resultado acumulado</span><strong id="totalBalance">R$ 0,00</strong><div class="balance-row"><div><small>Total recebido</small><b class="income" id="totalIncome">R$ 0,00</b></div><div><small>Total gasto</small><b class="expense" id="totalExpense">R$ 0,00</b></div></div></article>
+      <div class="section-title"><h2>Desempenho mensal</h2></div><div id="monthlyReport" class="list"></div>
+      <button class="secondary full" id="backupBtn">Copiar resumo financeiro</button>
+      <p class="privacy-note">Seus dados ficam somente neste aparelho. Faça anotações ou cópias de segurança antes de trocar de celular.</p>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="active" data-page="dashboard"><span>⌂</span>Início</button>
+    <button data-page="transactions"><span>↕</span>Lançamentos</button>
+    <button data-page="calendar"><span>▦</span>Calendário</button>
+    <button data-page="reports"><span>▥</span>Relatórios</button>
+  </nav>
+
+  <dialog id="transactionModal"><form id="transactionForm"><div class="modal-head"><h2>Novo lançamento</h2><button type="button" class="close">×</button></div><div class="type-toggle"><label><input type="radio" name="type" value="income" checked><span>Entrada</span></label><label><input type="radio" name="type" value="expense"><span>Saída</span></label></div><label>Valor (R$)<input id="txAmount" type="number" inputmode="decimal" min="0.01" step="0.01" required placeholder="0,00"></label><label>Descrição<input id="txDescription" required maxlength="60" placeholder="Ex.: Corridas Uber"></label><label>Categoria<select id="txCategory" required></select></label><label>Data<input id="txDate" type="date" required></label><label>Plataforma<select id="txPlatform"><option>Uber</option><option>99</option><option>Particular</option><option>Não se aplica</option></select></label><button class="primary full" type="submit">Salvar lançamento</button></form></dialog>
+  <dialog id="goalModal"><form id="goalForm"><div class="modal-head"><h2>Meta semanal</h2><button type="button" class="close">×</button></div><label>Valor da meta (R$)<input id="goalInput" type="number" min="0" step="0.01" required></label><button class="primary full" type="submit">Salvar meta</button></form></dialog>
+  <dialog id="scheduleModal"><form id="scheduleForm"><div class="modal-head"><h2>Novo compromisso</h2><button type="button" class="close">×</button></div><label>Descrição<input id="scheduleDescription" required maxlength="60" placeholder="Ex.: Parcela do carro"></label><label>Valor (R$)<input id="scheduleAmount" type="number" min="0.01" step="0.01" required></label><label>Data de pagamento<input id="scheduleDate" type="date" required></label><label>Tipo<select id="scheduleType"><option value="expense">Conta a pagar</option><option value="income">Valor a receber</option></select></label><button class="primary full" type="submit">Adicionar ao calendário</button></form></dialog>
+  <dialog id="settingsModal"><form><div class="modal-head"><h2>Configurações</h2><button type="button" class="close">×</button></div><div id="accountInfo" class="account-info"></div><p class="privacy-note">Rota Financeira Pro • Seus dados são sincronizados com segurança.</p><button type="button" class="secondary full" id="logoutBtn">Sair da conta</button><button type="button" class="danger full" id="clearBtn">Apagar dados deste aparelho</button></form></dialog>
+  <div id="toast"></div>
+  <script src="cloud.js"></script><script src="app.js"></script>
+</body>
+</html>
