@@ -1,1 +1,15 @@
-.hidden{display:none!important}.auth-screen{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 0,#1d3023 0,#0b0f0e 45%);display:grid;place-items:center;padding:18px;overflow:auto}.auth-card{width:100%;max-width:430px;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 28px 70px #0008}.auth-brand{text-align:center;margin-bottom:25px}.auth-brand .logo{margin:0 auto 14px;width:52px;height:52px;font-size:16px}.auth-brand h1{font-size:24px}.auth-brand p{color:var(--muted);font-size:12px;line-height:1.5;margin-top:7px}.auth-form{display:flex;flex-direction:column;gap:14px}.auth-form h2{text-align:center;font-size:19px}.auth-form>p{text-align:center;color:var(--muted);font-size:11px}.link-inline{border:0;background:none;color:var(--green);font-weight:800}.trial-badge{text-align:center;color:var(--green);background:#1d2c20;border:1px solid #354b39;padding:9px;border-radius:11px;font-size:11px}.auth-message{min-height:18px;text-align:center;color:var(--red);font-size:11px;margin-top:12px;line-height:1.4}.price{text-align:center;display:flex;flex-direction:column;margin:25px 0}.price strong{font-size:34px;color:var(--green)}.price span{color:var(--muted);font-size:12px}.auth-card>.secondary{margin-top:9px}.account-info{padding:13px;background:var(--surface2);border-radius:12px;font-size:11px;color:var(--muted);line-height:1.6}
+# Rota Financeira — Android
+
+Aplicativo Android do **Rota Financeira** para motoristas de Uber e 99.
+
+## Como gerar o APK
+
+1. Envie todos os arquivos deste projeto para um repositório do GitHub.
+2. Abra a aba **Actions**.
+3. Selecione **Gerar APK Android**.
+4. Clique em **Run workflow**.
+5. Quando a execução terminar, abra-a e baixe o artefato **rota-financeira-apk**.
+
+Esta versão usa cadastro e login próprios pelo Supabase, oferece 7 dias de teste e
+sincroniza os dados de cada motorista. Não utiliza login do ChatGPT. Para a Play Store,
+gere também o bundle com `:app:bundleRelease`.
